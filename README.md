@@ -15,7 +15,7 @@ There is also an additional word document (_'updated_reproducible_code_simulatin
 The `scripts` directory contains code for data preparation, method simulation, and result plotting. It is further divided into the following four folders:
 
 - **Prepare, Summarize, and Compare Data**: This folder contains code for pre-processing the data, providing summary statistics, and comparing sex differences in limb lengths across global groups.
-- **Correlation Between Aggregate and Conventional Indices**: Here, you can find scripts that explore the correlation between aggregate and conventional indices.
+- **Correlation Between Aggregate and Conventional Indices**: Here, you can find scripts that explore the correlation between aggregate and conventional indices using linear regression.
 - **Simulating Three Commingling Conditions**: This folder contains code for simulating three commingling conditions.
 - **Plot Errors**: The scripts in this folder are used for plotting errors associated with the aggregate method in predicting conventional indices under various commingling conditions.
 
