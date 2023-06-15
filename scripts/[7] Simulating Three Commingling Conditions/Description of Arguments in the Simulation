@@ -1,31 +1,24 @@
-# Description of Arguments in the Simulation
-
-## Input Arguments
-
-| Argument | Definition |
-|----------|------------|
-| N        | The total number of sample limbs, which can be the combination of the humerus and radius for the upper limb, or the combination of the femur and tibiae for the lower limb |
-| n1       | The number of matched bones, i.e., humeri and radius (or the femur and tibia) from the same individual |
-| n2       | The number of matched bones, i.e., the humerus and radius (or the femur and tibia) from different individuals |
-| c        | The commingling degree of sample limbs, which quantifies the proportion of unmatched bones within the assemblage. For example, the n2 can be calculated as N * c, while n1 can be calculated as N * (1 - c) |
-| mean.hml | The mean of the maximum humeral length |
-| mean.fbl | The mean of the bicondylar femoral length |
-| mean.bi  | The mean of the Brachial Index |
-| mean.ci  | The mean of the Crural Index |
-| sd.hml   | The standard deviation of the maximum humeral length |
-| sd.fbl   | The standard deviation of the bicondylar femoral length |
-| sd.bi    | The standard deviation of the Brachial Index, which also represents the within-group variation in the intra-upper-limb proportion |
-| sd.ci    | The standard deviation of the Crural Index, which also represents the within-group variation in the intra-lower-limb proportion |
-| nsim     | The number of iterations to be performed in the simulation loop |
-
+## Description of Arguments in the Simulation
+### Input Arguments
+```
+**N**: The total number of sample limbs, which can be the combination of the humerus and radius for the upper limb, or the combination of the femur and tibiae for the lower limb
+**n1**: The number of matched bones, i.e., humeri and radius (or the femur and tibia) from the same individual
+**n2**: The number of matched bones, i.e., the humerus and radius (or the femur and tibia) from different individuals
+**c**: The commingling degree of sample limbs, which quantifies the proportion of unmatched bones within the assemblage. For example, the n2 can be calculated as N * c, while n1 can be calculated as N * (1 - c)
+**mean.hml**: The mean of the maximum humeral length
+**mean.fbl**: The mean of the bicondylar femoral length
+**mean.bic**: The mean of the conventional Brachial Index
+**mean.cic**: The mean of the conventional Crural Index
+**sd.hml**: The standard deviation of the maximum humeral length
+**sd.fbl**: The standard deviation of the bicondylar femoral length
+**sd.bic**: The standard deviation of the conventionalBrachial Index, which also represents the within-group variation in the intra-upper-limb proportion.
+**sd.cic**: The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion.
+**nsim**: The number of iterations to be performed in the simulation loop
+```
 ### Output Arguments
-
-| Argument  | Definition |
-|-----------|------------|
-| est.bi    | Estimated Brachial Index using the aggregate method |
-| est.ci    | Estimated Crural Index using the aggregate method |
-| error.bi  | The difference between the estimated Brachial Index and the input Brachial Index, i.e., error.bi = est.bi – mean.bi |
-| error.ci  | The difference between the estimated Crural Index and the input Crural Index, i.e., error.ci = est.ci – mean.ci |
-
-
-
+```
+**est.bi**: Estimated Brachial Index using the aggregate method
+**est.ci**: Estimated Crural Index using the aggregate method
+**error.bi**: The difference between the estimated Brachial Index and the input Brachial Index, i.e., error.bi = est.bi – mean.bi
+**error.ci**: The difference between the estimated Crural Index and the input Crural Index, i.e., error.ci = est.ci – mean.ci
+```
