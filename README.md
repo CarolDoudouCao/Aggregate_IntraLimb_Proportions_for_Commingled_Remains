@@ -73,7 +73,7 @@ Regarding the arguments in the simulation, the input includes the total number o
 ```
 R version 4.1.3 (2022-03-10)
   
-attached base packages:
+Below are attached packages:
  [1] ".GlobalEnv"          "package:scales"      "package:gridExtra"   "package:terra"       "package:lubridate"   "package:forcats"    
  [7] "package:stringr"     "package:dplyr"       "package:purrr"       "package:readr"       "package:tidyr"       "package:tibble"     
 [13] "package:ggplot2"     "package:tidyverse"   "package:viridis"     "package:viridisLite" "tools:rstudio"       "package:stats"      
