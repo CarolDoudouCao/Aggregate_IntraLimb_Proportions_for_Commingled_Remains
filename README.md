@@ -25,6 +25,46 @@ The `outcome` directory includes three folders:
 - **Compare Without Simulating**: Here, you can find visualizations showing the correlation between aggregate and conventional indices without manipulating the commingling conditions.
 - **Plot Errors**: This folder includes plots depicting the errors obtained using the aggregate method in predicting the conventional indices under various commingling conditions.
 
+### Illustration 
+
+### Conventional and Aggregate Approaches for Estimating Intra-Limb Proportions
+
+| Method                | Conventional Approach                                                                          | Aggregate Approach                                                                      |
+|-----------------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| Description           | Index calculated for each individual, and then mean taken for the group                       | Mean of relevant measurements computed for aggregated index                              |
+| BI Equation           | BIi = RMLi / HMLi * 100                                                                       | BIgroup = (Σ(BI) i) / n                                                                  |
+| CI Equation           | CIi = TMLi / FBLi * 100                                                                       | CIgroup = (Σ(CIi)) / n                                                                   |
+| Applicability         | Suitable for identified individuals                                                           | Practical for commingled remains without identified individuals                          |
+| Benefits              | Provides individual- and population-level analysis                                           | Enables comparison between different populations without individual identification      |
+| Limitations           | Not feasible for commingled remains                                                           | Validity and comparability to the conventional method of estimating intra-limb proportions require further investigation |
+* i: the ith individual in the group; n: the total number of individuals in the group; Σ: the sum from i = 1 to n. BIi: the Brachial Index for the ith individual; CIi: the Crural Index for the ith individual. BIgroup: the Brachial Index on group level; CIgroup: the Crural Index on group level. RMLi: the radial length for the ith individual; HMLi: the humeral length for the ith individual; TMLi: the tibial length for the ith individual; FBLi: the bicondylar femoral length for the ith individual. 
+
+
+### Description of Arguments in the Simulation
+#### Input Arguments
+| Argument     | Description                                                                             |
+|--------------|-----------------------------------------------------------------------------------------|
+| N            | The total number of sample limbs, which can be the combination of the humerus and radius for the upper limb, or the combination of the femur and tibiae for the lower limb |
+| n1           | The number of matched bones, i.e., humeri and radius (or the femur and tibia) from the same individual |
+| n2           | The number of matched bones, i.e., the humerus and radius (or the femur and tibia) from different individuals |
+| c            | The commingling degree of sample limbs, which quantifies the proportion of unmatched bones within the assemblage. For example, n2 can be calculated as N * c, while n1 can be calculated as N * (1 - c) |
+| mean.hml     | The mean of the maximum humeral length                                                  |
+| mean.fbl     | The mean of the bicondylar femoral length                                               |
+| mean.bic     | The mean of the conventional Brachial Index                                             |
+| mean.cic     | The mean of the conventional Crural Index                                               |
+| sd.hml       | The standard deviation of the maximum humeral length                                    |
+| sd.fbl       | The standard deviation of the bicondylar femoral length                                 |
+| sd.bic       | The standard deviation of the conventional Brachial Index, which also represents the within-group variation in the intra-upper-limb proportion |
+| sd.cic       | The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion |
+| nsim         | The number of iterations to be performed in the simulation loop                          |
+
+#### Output Arguments
+| Argument     | Description                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| est.bi       | Estimated Brachial Index using the aggregate method                          |
+| est.ci       | Estimated Crural Index using the aggregate method                            |
+| error.bi     | The difference between the estimated Brachial Index and the input Brachial Index, i.e., error.bi = est.bi - mean.bi |
+| error.ci     | The difference between the estimated Crural Index and the input Crural Index, i.e., error.ci = est.ci - mean.ci |
 
 ## R Session Info
 ```
