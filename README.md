@@ -24,7 +24,7 @@ The `outcome` directory includes three folders:
 - **Plot Global Data**: This folder contains visualizations of limb lengths and indices (Brachial and Crural indices) in the global dataset.
 - **Compare Without Simulating**: Here, you can find visualizations showing the correlation between aggregate and conventional indices without manipulating the commingling conditions.
 - **Plot Errors**: This folder includes plots depicting the errors obtained using the aggregate method in predicting the conventional indices under various commingling conditions.
-- 
+ 
 ## Illustration
 The illustration compares the conventional approach, where an index is calculated for each individual and then averaged for the group, with the aggregate approach that computes the mean of relevant measurements for an aggregated index. The input arguments in the simulation include the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
 
