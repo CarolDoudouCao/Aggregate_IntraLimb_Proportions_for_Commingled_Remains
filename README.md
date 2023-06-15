@@ -1,6 +1,6 @@
 # Evaluating an Aggregate Method for Estimating Intra-Limb Proportions for Commingled Remains
 
-This repository contains illustrations and scripts for evaluating an Aggregate Method for Estimating Intra-Limb Proportions for Commingled Remains.
+This repository contains illustrations, scripts and outcome graphs for evaluating an Aggregate Method for Estimating Intra-Limb Proportions for Commingled Remains.
 
 ## Data Availability
 Two published datasets were used to create the global dataset analyzed here:
@@ -26,11 +26,12 @@ The `outcome` directory includes three folders:
 - **Plot Errors**: This folder includes plots depicting the errors obtained using the aggregate method in predicting the conventional indices under various commingling conditions.
  
 ## Illustration
-The illustration compares the conventional approach, where an index is calculated for each individual and then averaged for the group, with the aggregate approach that computes the mean of relevant measurements for an aggregated index. 
 
-As for the arguments in the simulation, the input includes the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
+The illustration provides a comparison between the conventional approach and the aggregate approach for estimating intra-limb proportions, as well as the description of the simulation parameters
 
 ### Conventional and Aggregate Approaches for Estimating Intra-Limb Proportions
+The table below compares the conventional approach, where an index is calculated for each individual and then averaged for the group, with the aggregate approach that computes the mean of relevant measurements for an aggregated index. 
+
 | Method                | Conventional Approach                                                                          | Aggregate Approach                                                                      |
 |-----------------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | Description           | Index calculated for each individual, and then mean taken for the group                       | Mean of relevant measurements computed for aggregated index                              |
@@ -42,6 +43,7 @@ As for the arguments in the simulation, the input includes the total number of s
 * i: the ith individual in the group; n: the total number of individuals in the group; Σ: the sum from i = 1 to n. BIi: the Brachial Index for the ith individual; CIi: the Crural Index for the ith individual. BIgroup: the Brachial Index on group level; CIgroup: the Crural Index on group level. RMLi: the radial length for the ith individual; HMLi: the humeral length for the ith individual; TMLi: the tibial length for the ith individual; FBLi: the bicondylar femoral length for the ith individual. 
 
 ### Description of Arguments in the Simulation
+Regarding the arguments in the simulation, the input includes the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
 #### Input Arguments
 | Argument     | Description                                                                             |
 |--------------|-----------------------------------------------------------------------------------------|
