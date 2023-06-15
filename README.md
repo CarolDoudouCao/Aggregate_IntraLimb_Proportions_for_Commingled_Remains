@@ -25,10 +25,8 @@ The `outcome` directory includes three folders:
 - **Compare Without Simulating**: Here, you can find visualizations showing the correlation between aggregate and conventional indices without manipulating the commingling conditions.
 - **Plot Errors**: This folder includes plots depicting the errors obtained using the aggregate method in predicting the conventional indices under various commingling conditions.
 
-### Illustration 
-
+## Illustration 
 ### Conventional and Aggregate Approaches for Estimating Intra-Limb Proportions
-
 | Method                | Conventional Approach                                                                          | Aggregate Approach                                                                      |
 |-----------------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
 | Description           | Index calculated for each individual, and then mean taken for the group                       | Mean of relevant measurements computed for aggregated index                              |
@@ -38,7 +36,6 @@ The `outcome` directory includes three folders:
 | Benefits              | Provides individual- and population-level analysis                                           | Enables comparison between different populations without individual identification      |
 | Limitations           | Not feasible for commingled remains                                                           | Validity and comparability to the conventional method of estimating intra-limb proportions require further investigation |
 * i: the ith individual in the group; n: the total number of individuals in the group; Σ: the sum from i = 1 to n. BIi: the Brachial Index for the ith individual; CIi: the Crural Index for the ith individual. BIgroup: the Brachial Index on group level; CIgroup: the Crural Index on group level. RMLi: the radial length for the ith individual; HMLi: the humeral length for the ith individual; TMLi: the tibial length for the ith individual; FBLi: the bicondylar femoral length for the ith individual. 
-
 
 ### Description of Arguments in the Simulation
 #### Input Arguments
