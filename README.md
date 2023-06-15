@@ -8,7 +8,7 @@ Two published datasets were used to create the global dataset analyzed here:
 2. The Goldman Osteometric dataset (http://web.utk.edu/~auerbach/GOLD.htm)
 
 ## File Organization
-The repository includes two directories: `scripts` and `outcome`.
+The repository includes two directories: `scripts` and `outcome`. There is also a word document containing the full simulation code.
 
 ### Scripts
 The `scripts` directory contains code for data preparation, method simulation, and result plotting. It is further divided into the following four folders:
