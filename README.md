@@ -26,7 +26,9 @@ The `outcome` directory includes three folders:
 - **Plot Errors**: This folder includes plots depicting the errors obtained using the aggregate method in predicting the conventional indices under various commingling conditions.
  
 ## Illustration
-The illustration compares the conventional approach, where an index is calculated for each individual and then averaged for the group, with the aggregate approach that computes the mean of relevant measurements for an aggregated index. The input arguments in the simulation include the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
+The illustration compares the conventional approach, where an index is calculated for each individual and then averaged for the group, with the aggregate approach that computes the mean of relevant measurements for an aggregated index. 
+
+As for the arguments in the simulation, the input includes the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
 
 ### Conventional and Aggregate Approaches for Estimating Intra-Limb Proportions
 | Method                | Conventional Approach                                                                          | Aggregate Approach                                                                      |
