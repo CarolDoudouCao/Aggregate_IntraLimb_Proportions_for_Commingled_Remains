@@ -67,8 +67,8 @@ Regarding the arguments in the simulation, the input includes the total number o
 |--------------|-----------------------------------------------------------------------------|
 | est.bi       | Estimated Brachial Index using the aggregate method                          |
 | est.ci       | Estimated Crural Index using the aggregate method                            |
-| error.bi     | The difference between the estimated Brachial Index and the input Brachial Index, i.e., error.bi = est.bi - mean.bi |
-| error.ci     | The difference between the estimated Crural Index and the input Crural Index, i.e., error.ci = est.ci - mean.ci |
+| error.bi     | The difference between the estimated Brachial Index and the input Brachial Index, i.e., error.bi = est.bi - mean.bic |
+| error.ci     | The difference between the estimated Crural Index and the input Crural Index, i.e., error.ci = est.ci - mean.cic |
 
 ## R Session Info
 ```
