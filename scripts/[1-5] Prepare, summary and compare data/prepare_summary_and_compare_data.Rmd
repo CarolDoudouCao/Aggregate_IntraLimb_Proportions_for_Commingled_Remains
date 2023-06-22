@@ -16,13 +16,17 @@ library(tidyverse)
 library(terra)
 library(gridExtra)
 library(scales)
+library(readxl)
+library(httr)
+
 ```
 
 # 1. Prepare the data
 ## 1.1. Read the Goldman and EU datasets
 ```{r}
 # Goldman dataset
-Goldman <- read.csv("D:/DATA SET/Data processing/AggregatedCI&BI/simulation_dataset/Goldman.csv")
+GET('http://web.utk.edu/~auerbach/Goldman.xls', write_disk(tf_gm <- tempfile(fileext = ".xls")))
+Goldman <- read_excel(tf_gm)
 
 # EU_Ruff
 EU <- read.csv("D:/DATA SET/Data processing/AggregatedCI&BI/simulation_dataset/Ruff-European.csv")
