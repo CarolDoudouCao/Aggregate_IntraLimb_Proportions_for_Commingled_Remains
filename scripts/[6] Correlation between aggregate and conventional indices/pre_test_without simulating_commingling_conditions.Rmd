@@ -18,7 +18,27 @@ res_arm$BIa <- res_arm$finalRML/res_arm$finalHML
 res_leg$CIa <- res_leg$finalTML/res_leg$finalFBL
 ```
 
-## 6.3. Linear regression
+## 6.3. Pearson's correlation coefficient and its confidence interval
+```{r}
+# Calculate Pearson's correlation coefficient and its confidence interval
+correlation_bi <- cor(res_arm$BIa, res_arm$ConventionalBI)
+confidence_interval_bi <- cor.test(res_arm$BIa, res_arm$ConventionalBI)$conf.int
+
+correlation_ci <- cor(res_leg$CIa, res_leg$ConventionalCI)
+confidence_interval_ci <- cor.test(res_leg$CIa, res_leg$ConventionalCI)$conf.int
+
+# Print the results
+cat("Correlation and Confidence Interval for BIa and ConventionalBI:\n")
+cat("Correlation coefficient:", correlation_bi, "\n")
+cat("Confidence interval:", confidence_interval_bi, "\n\n")
+
+cat("Correlation and Confidence Interval for CIa and ConventionalCI:\n")
+cat("Correlation coefficient:", correlation_ci, "\n")
+cat("Confidence interval:", confidence_interval_ci, "\n")
+
+```
+
+## 6.4. Linear regression
 ```{r}
 # Fit the linear regression model
 lm_model_bi <- lm(BIa ~ ConventionalBI, data = res_arm)
@@ -29,7 +49,7 @@ summary(lm_model_bi)
 summary(lm_model_ci)
 ```
 
-## 6.4. Plot
+## 6.5. Plot
 ```{r}
 # Scatter plot with linear regression line for BIa vs. BIc
 plot_bi <- ggplot(data = res_arm, aes(x = ConventionalBI, y = BIa)) +
