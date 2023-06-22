@@ -27,9 +27,18 @@ library(httr)
 # Goldman dataset
 GET('http://web.utk.edu/~auerbach/Goldman.xls', write_disk(tf_gm <- tempfile(fileext = ".xls")))
 Goldman <- read_excel(tf_gm)
+# Save Goldman dataset as a CSV file in user-defined path
+write.csv(Goldman, file = "path/to/Goldman.csv", row.names = FALSE)
+# Read Goldman dataset as CSV
+Goldman <- read.csv("path/to/Goldman.csv")
 
 # EU_Ruff
-EU <- read.csv("D:/DATA SET/Data processing/AggregatedCI&BI/simulation_dataset/Ruff-European.csv")
+GET('https://fae.johnshopkins.edu/wp-content/uploads/2022/08/European-Data-Set-7-22.xlsx', write_disk(tf_eu <- tempfile(fileext = ".xls")))
+EU <- read_excel(tf_eu)
+# Save EU_Ruff dataset as a CSV file
+write.csv(EU, file = "path/to/EU_Ruff.csv", row.names = FALSE)
+# Read EU_Ruff dataset as CSV
+EU <- read.csv("path/to/EU_Ruff.csv")
 ```
 
 ## 1.2. Select the columns of interest (Assuming datasets have been loaded)
