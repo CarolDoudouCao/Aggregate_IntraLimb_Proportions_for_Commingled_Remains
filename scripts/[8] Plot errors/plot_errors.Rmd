@@ -4,11 +4,12 @@ author: "Doudou Carol Cao"
 date: "2023-06-14"
 output: html_document
 ---
+
 # 8. Plot
 ## 8.1. Set the parameter for indicative lines and common colour scale for each graph
 ```{r}
 # parameter for indicative lines
-simulated_n <- c (30, 50, 100)
+simulated_n <- c (30, 50, 100, 150)
 simulated_c <- c (0.25, 0.5, 0.75)
 
 # Find the common color scale limits for different sets of plots (mean, median, 75 percentile, and the number as well as proportion of large errors)
@@ -39,14 +40,17 @@ plot01 <- ggplot(results_df_bi[results_df_bi$v == 0.01, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling degree') +
   labs(fill = "Mean Errors\
-(sd.bi = 0.01)") +
+(sd.cBI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot01
@@ -62,14 +66,17 @@ plot02 <- ggplot(results_df_bi[results_df_bi$v == 0.01, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.bi = 0.01)") +
+(sd.cBI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
-  theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
+
 
 # Print
 plot02
@@ -85,14 +92,18 @@ plot03 <- ggplot(results_df_bi[results_df_bi$v == 0.01, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile\
-(sd.bi = 0.01)") +
+(sd.cBI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
+
 
 # Print
 plot03
@@ -108,15 +119,18 @@ plot04 <- ggplot(results_df_bi[results_df_bi$v == 0.01, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Errors(> 0.02,\
-sd.bi = 0.02)") +
+Large Errors\
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot04
@@ -124,25 +138,48 @@ plot04
 
 #### 8.2.1.5.  Proportion of large error ~ sample size + commingling
 ```{r}
-plot05 <- ggplot(results_df_bi[results_df_bi$v == 0.01, ], aes(x = n, y = c, fill = prop_large_error)) +
+
+# Filter the data for v = 0.01
+filtered_biv_0.01 <- subset(results_df_bi, v == 0.01)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_biv_0.01$prop_large_error_range_biv_0.01 <- cut(filtered_biv_0.01$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+library(RColorBrewer)
+
+# Define the number of colors in the color scheme
+num_colors <- 5
+
+# Generate a color palette from red to light blue
+color_palette <- brewer.pal(num_colors, "RdYlBu")
+
+# Reverse the color palette to start from red
+color_palette <- rev(color_palette)
+
+plot05 <- ggplot(filtered_biv_0.01, aes(x = n, y = c, fill = prop_large_error_range_biv_0.01)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_bi +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
-  labs(fill = "Proportion of\
-Large Errors\
-(sd.bi = 0.01)") +
+  labs(fill = "the Proportion of \nLarge Errors\n(sd.cBI = 0.01)
+       ") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
-# Print
-plot05
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
+
+# Print the plot
+print(plot05)
 ```
 
 ### 8.2.2. Variation = 0.02
@@ -156,14 +193,17 @@ plot06 <- ggplot(results_df_bi[results_df_bi$v == 0.02, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Mean Errors\
-(sd.bi = 0.02)") +
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot06
@@ -179,14 +219,17 @@ plot07 <- ggplot(results_df_bi[results_df_bi$v == 0.02, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.bi = 0.02)") +
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot07
@@ -202,14 +245,17 @@ plot08 <- ggplot(results_df_bi[results_df_bi$v == 0.02, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile\
-(sd.bi = 0.02)") +
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot08     
@@ -225,15 +271,18 @@ plot09 <- ggplot(results_df_bi[results_df_bi$v == 0.02, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Error (> 0.02,\
-sd.bi = 0.02)") +
+Large Error\
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot09
@@ -241,32 +290,44 @@ plot09
 
 #### 8.2.2.5. Proportion of large error ~ sample size + commingling
 ```{r}
-plot010 <- ggplot(results_df_bi[results_df_bi$v == 0.02, ], aes(x = n, y = c, fill = prop_large_error)) +
+# Filter the data for v = 0.01
+filtered_biv_0.02 <- subset(results_df_bi, v == 0.02)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_biv_0.02$prop_large_error_range_biv_0.02 <- cut(filtered_biv_0.02$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+plot010 <- ggplot(filtered_biv_0.02, aes(x = n, y = c, fill = prop_large_error_range_biv_0.02)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_bi +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
-  labs(fill = "Proportion of\
-Large Errors\
-(sd.bi = 0.02)") +
+  labs(fill = "The Proportion of\
+Large Errors \
+(sd.cBI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot010
 ```
 
-### 8.2.1. Variation = 0.08
+### 8.2.1. Variation = 0.08/0.05(for the propotion)
 #### 8.2.3.1. Mean error ~ sample size + commingling
 ```{r}
-
 plot011 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fill = mean_abs_error)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', linewidth = 0.5, linetype = 'dashed') +
@@ -275,14 +336,17 @@ plot011 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fi
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Mean Errors\
-(sd.bi = 0.08)") +
+(sd.cBI = 0.08)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot011
@@ -298,14 +362,17 @@ plot012 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fi
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.bi = 0.08)") +
+(sd.cBI = 0.08)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot012
@@ -321,14 +388,17 @@ plot013 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fi
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile\
-(sd.bi = 0.08)") +
+(sd.cBI = 0.08)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot013      
@@ -344,15 +414,18 @@ plot014 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fi
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Error (> 0.02,\
-sd.bi = 0.08)") +
+Large Error\
+(sd.cBI = 0.08)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot014
@@ -361,26 +434,76 @@ plot014
 
 #### 8.2.3.5. Proportion of large error ~ sample size + commingling
 ```{r}
-plot015 <- ggplot(results_df_bi[results_df_bi$v == 0.08, ], aes(x = n, y = c, fill = prop_large_error)) +
+# Filter the data for v = 0.05
+filtered_biv_0.05 <- subset(results_df_bi, v == 0.05)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_biv_0.05$prop_large_error_range_biv_0.05 <- cut(filtered_biv_0.05$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+  plot015 <- ggplot(filtered_biv_0.05, aes(x = n, y = c, fill = prop_large_error_range_biv_0.05)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_bi +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
-  labs(fill = "Proportion of\
-Large Errors\
-(sd.bi = 0.08)") +
+  labs(fill = "The Proportion of\
+Large Errors \
+(sd.cBI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot015
+```
+
+#### 8.2.3.6. Proportion of large error ~ sample size + commingling
+```{r}
+# Filter the data for v = 0.08
+filtered_biv_0.08 <- subset(results_df_bi, v == 0.08)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_biv_0.08$prop_large_error_range_biv_0.08 <- cut(filtered_biv_0.08$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+  plot016 <- ggplot(filtered_biv_0.08, aes(x = n, y = c, fill = prop_large_error_range_biv_0.08)) +
+  geom_raster() +
+  geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
+  geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
+  scale_fill_manual(values = color_palette) +
+  xlab('Sample Size') +
+  ylab('Commingling') +
+  labs(fill = "The Proportion of\
+Large Errors\
+(sd.cBI = 0.08)
+") +
+  coord_cartesian(expand = FALSE) +
+  theme_bw() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
+        legend.title = element_text(size = 8, face = 'bold'),
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
+
+# Print
+plot016
 ```
 
 ## 8.3. Plot CI
@@ -396,17 +519,21 @@ plot1 <- ggplot(results_df_ci[results_df_ci$v == 0.01, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling degree') +
   labs(fill = "Mean Errors\
-(sd.ci = 0.01)") +
+(sd.cBI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot1
+
 ```
 
 #### 8.3.1.2. Median absolute error ~ sample size + commingling
@@ -419,14 +546,17 @@ plot2 <- ggplot(results_df_ci[results_df_ci$v == 0.01, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.ci = 0.01)") +
+(sd.cCI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot2
@@ -442,14 +572,16 @@ plot3 <- ggplot(results_df_ci[results_df_ci$v == 0.01, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile 
-(sd.ci = 0.01)") +
+(sd.cCIgroup = 0.01)") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot3
@@ -465,15 +597,18 @@ plot4 <- ggplot(results_df_ci[results_df_ci$v == 0.01, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Errors(> 0.02,\
-sd.ci = 0.01)") +
+Large Errors\
+(sd.cCI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot4
@@ -481,23 +616,36 @@ plot4
 
 #### 8.3.1.5. Proportion of large error ~ sample size + commingling
 ```{r}
-plot5 <- ggplot(results_df_ci[results_df_ci$v == 0.01, ], aes(x = n, y = c, fill = prop_large_error)) +
+# Filter the data for v = 0.01
+filtered_civ_0.01 <- subset(results_df_ci, v == 0.01)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_civ_0.01$prop_large_error_range_civ_0.01 <- cut(filtered_civ_0.01$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+plot5 <- ggplot(filtered_civ_0.01, aes(x = n, y = c, fill = prop_large_error_range_civ_0.01)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_ci +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Proportion of\
 Large Errors\
-(sd.ci = 0.01)") +
+(sd.cCI = 0.01)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot5
@@ -515,14 +663,17 @@ plot6 <- ggplot(results_df_ci[results_df_ci$v == 0.02, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Mean Errors\
-(sd.ci = 0.02)") +
+(sd.cCI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot6
@@ -538,14 +689,17 @@ plot7 <- ggplot(results_df_ci[results_df_ci$v == 0.02, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.ci = 0.02)") +
+(sd.cCI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot7
@@ -561,14 +715,17 @@ plot8 <- ggplot(results_df_ci[results_df_ci$v == 0.02, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile\
-(sd.ci = 0.02)") +
+(sd.cCI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot8
@@ -584,15 +741,18 @@ plot9 <- ggplot(results_df_ci[results_df_ci$v == 0.02, ], aes(x = n, y = c, fill
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Error (> 0.02,\
-sd.ci = 0.02)") +
+Large Errors\
+(sd.cCI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot9
@@ -600,23 +760,36 @@ plot9
 
 #### 8.3.2.5. Proportion of large error ~ sample size + commingling
 ```{r}
-plot10 <- ggplot(results_df_ci[results_df_ci$v == 0.02, ], aes(x = n, y = c, fill = prop_large_error)) +
+# Filter the data for v = 0.02
+filtered_civ_0.02 <- subset(results_df_ci, v == 0.02)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_civ_0.02$prop_large_error_range_civ_0.02 <- cut(filtered_civ_0.02$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+plot10 <- ggplot(filtered_civ_0.02, aes(x = n, y = c, fill = prop_large_error_range_civ_0.02)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_ci +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Proportion of\
 Large Errors\
-(sd.ci = 0.02)") +
+(sd.cCI = 0.02)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot10
@@ -634,14 +807,17 @@ plot11 <- ggplot(results_df_ci[results_df_ci$v == 0.05, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Mean Errors\
-(sd.ci = 0.05)") +
+(sd.cCI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot11
@@ -657,14 +833,17 @@ plot12 <- ggplot(results_df_ci[results_df_ci$v == 0.05, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Median Errors\
-(sd.ci = 0.05)") +
+(sd.cCI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot12
@@ -680,14 +859,17 @@ plot13 <- ggplot(results_df_ci[results_df_ci$v == 0.05, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "75th Percentile\
-(sd.ci = 0.05)") +
+(sd.cCI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot13
@@ -703,15 +885,18 @@ plot14 <- ggplot(results_df_ci[results_df_ci$v == 0.05, ], aes(x = n, y = c, fil
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "The Number of\
-Large Error (> 0.02,\
-sd.ci = 0.05)") +
+Large Errors\
+(sd.cCI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot14
@@ -719,23 +904,36 @@ plot14
 
 #### 8.3.3.5. Proportion of large error ~ sample size + commingling
 ```{r}
-plot15 <- ggplot(results_df_ci[results_df_ci$v == 0.05, ], aes(x = n, y = c, fill = prop_large_error)) +
+# Filter the data for v = 0.01
+filtered_civ_0.05 <- subset(results_df_ci, v == 0.05)
+
+# Create the categorical variable for prop_large_error ranges
+filtered_civ_0.05$prop_large_error_range_civ_0.05 <- cut(filtered_civ_0.05$prop_large_error, 
+                                            breaks = c(0, 0.01, 0.05, 0.1, 0.2, 1),
+                                            labels = c("< 1%", "1% - 5%", "5% - 10%", "10% - 20%", "> 20%"),
+                                            include.lowest = TRUE)
+
+  
+plot15 <- ggplot(filtered_civ_0.05, aes(x = n, y = c, fill = prop_large_error_range_civ_0.05)) +
   geom_raster() +
   geom_vline(xintercept = simulated_n, color = 'black', size = 0.5, linetype = 'dashed') +
   geom_hline(yintercept = simulated_c, color = 'black', size = 0.5, linetype = 'dashed') +
-  color_scale_prop_large_error_ci +
+  scale_fill_manual(values = color_palette) +
   xlab('Sample Size') +
   ylab('Commingling') +
   labs(fill = "Proportion of\
-Large Errors\
-(sd.ci = 0.05)") +
+Large Errors \
+(sd.cCI = 0.05)
+") +
   coord_cartesian(expand = FALSE) +
   theme_bw() +
-  theme(panel.grid = element_blank(), panel.border = element_blank(),
-        axis.text = element_text(size = 8, face = 'bold'),  # Adjust axis text size
-        axis.title = element_text(size = 8, face = 'bold'), # Adjust axis title size
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        axis.text = element_text(size = 8, face = 'bold'),
+        axis.title = element_text(size = 8, face = 'bold'),
         legend.title = element_text(size = 8, face = 'bold'),
-        legend.text = element_text(size = 8, face = 'bold'))
+        legend.text = element_text(size = 8, face = 'bold')) +
+  scale_x_continuous(breaks = c(30, 50, 100, 150, 200, 300), labels = c("30", "50","100","150", "200","300"))
 
 # Print
 plot15
@@ -763,5 +961,6 @@ comb_ci <- grid.arrange(plot1, plot6, plot11,
 # Combine the plots using grid.arrange
 comb_bc <- grid.arrange(plot05, plot5,
                         plot010,plot10,
-                        plot015,plot15, ncol = 2)
+                        plot015,plot15, 
+                        plot016, ncol = 2)
 ```
