@@ -18,14 +18,11 @@ color_scale_mean_bi <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(r
 color_scale_median_bi <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_bi$median_abs_error), max(results_df_bi$median_abs_error)))
 color_scale_percentile_75_bi <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_bi$percentile_75), max(results_df_bi$percentile_75)))
 color_scale_no_large_error_bi <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_bi$abs_error_count), max(results_df_bi$abs_error_count)))
-color_scale_prop_large_error_bi <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_bi$prop_large_error), max(results_df_bi$prop_large_error)))
-
 ## CI
 color_scale_mean_ci <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_ci$mean_abs_error), max(results_df_ci$mean_abs_error)))
 color_scale_median_ci <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_ci$median_abs_error), max(results_df_ci$median_abs_error)))
 color_scale_percentile_75_ci <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_ci$percentile_75), max(results_df_ci$percentile_75)))
 color_scale_no_large_error_ci <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_ci$abs_error_count), max(results_df_ci$abs_error_count)))
-color_scale_prop_large_error_ci <- scale_fill_distiller(palette = "RdYlBu", limits = c(min(results_df_ci$prop_large_error), max(results_df_ci$prop_large_error)))
 ```
 
 ## 8.2. Plot-BI
