@@ -7,12 +7,12 @@
 **c**: The commingling degree of sample limbs, which quantifies the proportion of unmatched bones within the assemblage. For example, the n2 can be calculated as N * c, while n1 can be calculated as N * (1 - c)
 **mean.hml**: The mean of the maximum humeral length
 **mean.fbl**: The mean of the bicondylar femoral length
-**mean.bic**: The mean of the conventional Brachial Index
-**mean.cic**: The mean of the conventional Crural Index
+**mean.cbi**: The mean of the conventional Brachial Index
+**mean.cci**: The mean of the conventional Crural Index
 **sd.hml**: The standard deviation of the maximum humeral length
 **sd.fbl**: The standard deviation of the bicondylar femoral length
-**sd.bic**: The standard deviation of the conventionalBrachial Index, which also represents the within-group variation in the intra-upper-limb proportion.
-**sd.cic**: The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion.
+**sd.cbi**: The standard deviation of the conventionalBrachial Index, which also represents the within-group variation in the intra-upper-limb proportion.
+**sd.cci**: The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion.
 **nsim**: The number of iterations to be performed in the simulation loop
 ```
 ### Output Arguments
