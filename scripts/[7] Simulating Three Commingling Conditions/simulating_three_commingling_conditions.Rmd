@@ -19,7 +19,7 @@ library(gridExtra)
 library(scales)
 ```
 ## 7.1. Function for calculating and comparing the aggregated and conventional indices
-### 7.1.1 BIc vs. BIa
+### 7.1.1 cBI vs. aBI
 ```{r}
 simFun_bi <- function(n1,n2,mean.hml,sd.hml,sd.bi,mean.bi,nsim)
 {
@@ -44,7 +44,7 @@ simFun_bi <- function(n1,n2,mean.hml,sd.hml,sd.bi,mean.bi,nsim)
 }
 ```
 
-### 7.1.2 CIc vs. CIa
+### 7.1.2 cCI vs. aCI
 ```{r}
 simFun_ci <- function(n1,n2,mean.fbl,sd.fbl,sd.ci,mean.ci,nsim)
 {
