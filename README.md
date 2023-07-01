@@ -41,7 +41,7 @@ The table below compares the conventional approach, where an index is calculated
 | Applicability         | Suitable for identified individuals                                                           | Practical for commingled remains without identified individuals                          |
 | Benefits              | Provides individual- and population-level analysis                                           | Enables comparison between different populations without individual identification      |
 | Limitations           | Not feasible for commingled remains                                                           | Validity and comparability to the conventional method of estimating intra-limb proportions require further investigation |
-* i: the ith individual in the group; n: the total number of individuals in the group; Σ: the sum from i = 1 to n. BIi: the Brachial Index for the ith individual; CIi: the Crural Index for the ith individual. BIgroup: the Brachial Index on group level; CIgroup: the Crural Index on group level. RMLi: the radial length for the ith individual; HMLi: the humeral length for the ith individual; TMLi: the tibial length for the ith individual; FBLi: the bicondylar femoral length for the ith individual. 
+* i: the ith individual in the group; n: the total number of individuals in the group; Σ: the sum from 1 to n. BIi: the Brachial Index for the ith individual; CIi: the Crural Index for the ith individual. _aBIgroup_: aggregate Brachial Index on group level; _aCIgroup_: aggregate Crural Index on group level._cBIgroup_: conventional Brachial Index on group level; _cCIgroup_: conventional Crural Index on group level. _RMLi_: the radial length for the ith individual; _HMLi_: the humeral length for the ith individual; _TMLi_: the tibial length for the ith individual; _FBLi_: the BIcondylar femoral length for the ith individual.  
 
 ### Description of Arguments in the Simulation
 Regarding the arguments in the simulation, the input includes the total number of sample limbs, the number of matched and unmatched bones, commingling degree, mean values, and standard deviations. The output arguments consist of estimated Brachial and Crural Indices, as well as the errors between the estimated and input indices.
@@ -54,12 +54,12 @@ Regarding the arguments in the simulation, the input includes the total number o
 | c            | The commingling degree of sample limbs, which quantifies the proportion of unmatched bones within the assemblage. For example, n2 can be calculated as N * c, while n1 can be calculated as N * (1 - c) |
 | mean.hml     | The mean of the maximum humeral length                                                  |
 | mean.fbl     | The mean of the bicondylar femoral length                                               |
-| mean.bic     | The mean of the conventional Brachial Index                                             |
-| mean.cic     | The mean of the conventional Crural Index                                               |
+| mean.cbi     | The mean of the conventional Brachial Index                                             |
+| mean.cci     | The mean of the conventional Crural Index                                               |
 | sd.hml       | The standard deviation of the maximum humeral length                                    |
 | sd.fbl       | The standard deviation of the bicondylar femoral length                                 |
-| sd.bic       | The standard deviation of the conventional Brachial Index, which also represents the within-group variation in the intra-upper-limb proportion |
-| sd.cic       | The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion |
+| sd.cbi       | The standard deviation of the conventional Brachial Index, which also represents the within-group variation in the intra-upper-limb proportion |
+| sd.cci       | The standard deviation of the conventional Crural Index, which also represents the within-group variation in the intra-lower-limb proportion |
 | nsim         | The number of iterations to be performed in the simulation loop                          |
 
 #### Output Arguments
