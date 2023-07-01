@@ -40,7 +40,6 @@ write.csv(EU, file = "path/to/EU_Ruff.csv", row.names = FALSE)
 # Read EU_Ruff dataset as CSV
 EU <- read.csv("path/to/EU_Ruff.csv")
 ```
-
 ## 1.2. Select the columns of interest (Assuming datasets have been loaded)
 ```{r}
 # Select limb lengths in Goldman dataset
@@ -732,3 +731,36 @@ summary_mean_cCI_female
 summary_sd_cBI_female
 summary_sd_cCI_female
 ```
+
+# 5. Compare the limb lengths and indices between males and females
+## 5.1 Limb length - using linear mixed-effects model analysis
+```{r}
+fit_hml <- lmer(finalHML~Sex+(1|SITE),data=Armset)
+fit_rml <- lmer(finalRML~Sex+(1|SITE),data=Armset)
+fit_fbl <- lmer(finalFBL~Sex+(1|SITE),data=Legset)
+fit_tml <- lmer(finalTML~Sex+(1|SITE),data=Legset)
+
+summary(fit_hml)
+summary(fit_rml)
+summary(fit_fbl)
+summary(fit_tml)
+
+confint(fit_hml)
+confint(fit_rml)
+confint(fit_fbl)
+confint(fit_tml)
+```
+
+## 5.2 Indices - using linear mixed-effects model analysis
+```{r}
+fit_bi <- lmer(cBI~Sex+(1|SITE),data=Armset)
+fit_ci <- lmer(cCI~Sex+(1|SITE),data=Legset)
+
+summary(fit_bi)
+summary(fit_ci)
+
+confint(fit_bi)
+confint(fit_ci)
+
+```
+
