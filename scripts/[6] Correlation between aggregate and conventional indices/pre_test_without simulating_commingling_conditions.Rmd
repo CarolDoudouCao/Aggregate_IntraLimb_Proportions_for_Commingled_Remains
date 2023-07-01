@@ -7,42 +7,43 @@ output: html_document
 # 6. Compare the conventional and aggregated indices without the simulation 
 ## 6.1. Compute averages of conventinal values and mean limb lengths for each site
 ```{r}
-res_arm <- aggregate(cbind(finalHML,finalRML,ConventionalBI)~SITE,data=Armset,mean)
-res_leg <- aggregate(cbind(finalFBL,finalTML,ConventionalCI)~SITE,data=Legset,mean)
+res_arm <- aggregate(cbind(finalHML,finalRML,cBI)~SITE,data=Armset,mean)
+res_leg <- aggregate(cbind(finalFBL,finalTML,cCI)~SITE,data=Legset,mean)
 ```
 
 ## 6.2. compute conventional indices obtained from the mean limb lengths
 
 ```{r}
-res_arm$BIa <- res_arm$finalRML/res_arm$finalHML
-res_leg$CIa <- res_leg$finalTML/res_leg$finalFBL
+res_arm$aBI <- res_arm$finalRML/res_arm$finalHML
+res_leg$aCI <- res_leg$finalTML/res_leg$finalFBL
 ```
 
 ## 6.3. Pearson's correlation coefficient and its confidence interval
 ```{r}
 # Calculate Pearson's correlation coefficient and its confidence interval
-correlation_bi <- cor(res_arm$BIa, res_arm$ConventionalBI)
-confidence_interval_bi <- cor.test(res_arm$BIa, res_arm$ConventionalBI)$conf.int
+correlation_bi <- cor(res_arm$aBI, res_arm$cBI)
+confidence_interval_bi <- cor.test(res_arm$aBI, res_arm$cBI)$conf.int
 
-correlation_ci <- cor(res_leg$CIa, res_leg$ConventionalCI)
-confidence_interval_ci <- cor.test(res_leg$CIa, res_leg$ConventionalCI)$conf.int
+correlation_ci <- cor(res_leg$aCI, res_leg$cCI)
+confidence_interval_ci <- cor.test(res_leg$aCI, res_leg$cCI)$conf.int
 
 # Print the results
-cat("Correlation and Confidence Interval for BIa and ConventionalBI:\n")
+cat("Correlation and Confidence Interval for aBI and cBI:\n")
 cat("Correlation coefficient:", correlation_bi, "\n")
 cat("Confidence interval:", confidence_interval_bi, "\n\n")
 
-cat("Correlation and Confidence Interval for CIa and ConventionalCI:\n")
+cat("Correlation and Confidence Interval for aCI and cCI:\n")
 cat("Correlation coefficient:", correlation_ci, "\n")
 cat("Confidence interval:", confidence_interval_ci, "\n")
 
 ```
 
+
 ## 6.4. Linear regression
 ```{r}
 # Fit the linear regression model
-lm_model_bi <- lm(BIa ~ ConventionalBI, data = res_arm)
-lm_model_ci <- lm(CIa ~ ConventionalCI, data = res_leg)
+lm_model_bi <- lm(aBI ~ cBI, data = res_arm)
+lm_model_ci <- lm(aCI ~ cCI, data = res_leg)
 
 # Print the model summary
 summary(lm_model_bi)
@@ -51,23 +52,22 @@ summary(lm_model_ci)
 
 ## 6.5. Plot
 ```{r}
-# Scatter plot with linear regression line for BIa vs. BIc
-plot_bi <- ggplot(data = res_arm, aes(x = ConventionalBI, y = BIa)) +
+# Scatter plot with linear regression line for aBI vs. cBI
+plot_bi <- ggplot(data = res_arm, aes(x = cBI, y = aBI)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "#d45087") +
-  labs(title = "BIc vs. BIa", x = "BIc", y = "BIa")+
+  labs(title = "cBI vs. aBI", x = "cBI", y = "aBI")+
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 14))
 
-# Scatter plot with linear regression line for CIa vs. CIc
-plot_ci <- ggplot(data = res_leg, aes(x = ConventionalCI, y = CIa)) +
+# Scatter plot with linear regression line for aCI vs. cCI
+plot_ci <- ggplot(data = res_leg, aes(x = cCI, y = aCI)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
-  labs(title = "CIc vs. CIa", x = "CIc", y = "CIa")+
+  labs(title = "cCI vs. aCI", x = "cCI", y = "aCI")+
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 14))
 
 # Combine the plots
 combined_indices <- grid.arrange(plot_bi, plot_ci, ncol = 2,nrow = 1)
 ```
-
