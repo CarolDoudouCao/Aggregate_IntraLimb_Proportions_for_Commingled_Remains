@@ -89,7 +89,6 @@ EU_filtered_arm <- EU_selected_columns[complete.cases(EU_selected_columns$finalH
 # --- Leg ---
 ## Goldman 
 Goldman_filtered_leg <- Goldman_selected_columns[complete.cases(Goldman_selected_columns$finalFBL, Goldman_selected_columns$finalTML), ]
-
 ## EU_Ruff
 EU_filtered_leg <- EU_selected_columns[complete.cases(EU_selected_columns$TMAXLN, EU_selected_columns$FBICLN), ]
 ```
@@ -127,16 +126,16 @@ EU_filtered_final_leg <- EU_filtered_leg[EU_filtered_leg$SITE %in% names(no_grou
 
 # Brachial index
 ## Goldman
-Goldman_filtered_final_arm$ConventionalBI <- Goldman_filtered_final_arm$finalRML/ 
+Goldman_filtered_final_arm$cBI <- Goldman_filtered_final_arm$finalRML/ 
 Goldman_filtered_final_arm$finalHML
 
 ## EU_Ruff
-EU_filtered_final_arm$ConventionalBI <- EU_filtered_final_arm$finalRML/ 
+EU_filtered_final_arm$cBI <- EU_filtered_final_arm$finalRML/ 
 EU_filtered_final_arm$finalHML
 
 # Crural index
 ## Goldman
-Goldman_filtered_final_leg$ConventionalCI <- Goldman_filtered_final_leg$finalTML / 
+Goldman_filtered_final_leg$cCI <- Goldman_filtered_final_leg$finalTML / 
 Goldman_filtered_final_leg$finalFBL
 
 # Rename columns
@@ -144,7 +143,7 @@ names(EU_filtered_final_leg)[names(EU_filtered_final_leg) == "FBICLN"] <- "final
 names(EU_filtered_final_leg)[names(EU_filtered_final_leg) == "TMAXLN"] <- "finalTML"
 
 # Calculate TrueCI
-EU_filtered_final_leg$ConventionalCI <- EU_filtered_final_leg$finalTML / EU_filtered_final_leg$finalFBL
+EU_filtered_final_leg$cCI <- EU_filtered_final_leg$finalTML / EU_filtered_final_leg$finalFBL
 ```
 
 
@@ -170,36 +169,90 @@ Goldman_filtered_final_leg$Sex <- ifelse(Goldman_filtered_final_leg$Sex == 0, 1,
 ## 2.2. Create the subset of the arm and leg
 ```{r}
 Armset <- rbind(transform(
-    EU_filtered_final_arm[, c("SITE", "SEX", "SPECIMEN_No", "finalHML", "finalRML", "ConventionalBI")],
+    EU_filtered_final_arm[, c("SITE", "SEX", "SPECIMEN_No", "finalHML", "finalRML", "cBI")],
     ID = SPECIMEN_No,
     Sex = SEX,
     source = "EU"
-  )[, c("SITE", "ID", "Sex", "finalHML", "finalRML", "ConventionalBI")]
+  )[, c("SITE", "ID", "Sex", "finalHML", "finalRML", "cBI")]
 ,
 transform(
-    Goldman_filtered_final_arm[, c("NOTE", "ID", "Sex", "finalHML", "finalRML", "ConventionalBI")],
+    Goldman_filtered_final_arm[, c("NOTE", "ID", "Sex", "finalHML", "finalRML", "cBI")],
     SITE = NOTE,
     source = "Goldman"
-    )[, c("SITE", "ID", "Sex", "finalHML", "finalRML", "ConventionalBI")]
+    )[, c("SITE", "ID", "Sex", "finalHML", "finalRML", "cBI")]
   
 )
 
 # Legset
 Legset <- rbind(
   transform(
-    EU_filtered_final_leg[, c("SITE", "SEX", "SPECIMEN_No", "finalFBL", "finalTML", "ConventionalCI")],
+    EU_filtered_final_leg[, c("SITE", "SEX", "SPECIMEN_No", "finalFBL", "finalTML", "cCI")],
     ID = SPECIMEN_No,
     Sex = SEX,
     source = "EU"
-  )[, c("SITE", "Sex", "ID", "finalFBL", "finalTML", "ConventionalCI")],
+  )[, c("SITE", "Sex", "ID", "finalFBL", "finalTML", "cCI")],
   transform(
-    Goldman_filtered_final_leg[, c("NOTE", "ID", "Sex", "finalTML", "finalFBL", "ConventionalCI")],
+    Goldman_filtered_final_leg[, c("NOTE", "ID", "Sex", "finalTML", "finalFBL", "cCI")],
     SITE = NOTE,
     source = "Goldman",
     Sex = as.numeric(Sex)
-  )[, c("SITE", "Sex", "ID", "finalFBL", "finalTML", "ConventionalCI")]
+  )[, c("SITE", "Sex", "ID", "finalFBL", "finalTML", "cCI")]
 )
 ```
+
+## 2.3 Examine the group size
+```{r}
+
+group_sizes_bi <- as.data.frame(table(Armset$SITE[Armset$SITE != "unknown"]))
+group_sizes_ci <- as.data.frame(table(Legset$SITE[Legset$SITE != "unknown"]))
+group_sizes_bi
+group_sizes_ci
+# Count number of groups with 5-10 IDs in Armset
+count_5_10_bi <- sum(group_sizes_bi$Freq >= 5 & group_sizes_bi$Freq <= 10)
+
+# Count number of groups with 10-30 IDs in Armset
+count_10_30_bi <- sum(group_sizes_bi$Freq > 10 & group_sizes_bi$Freq <= 30)
+
+# Count number of groups with 30-50 IDs in Armset
+count_30_50_bi <- sum(group_sizes_bi$Freq > 30 & group_sizes_bi$Freq <= 50)
+
+# Count number of groups with 50-100 IDs in Armset
+count_50_100_bi <- sum(group_sizes_bi$Freq > 50 & group_sizes_bi$Freq <= 100)
+
+# Count number of groups with 100+ IDs in Armset
+count_100_plus_bi <- sum(group_sizes_bi$Freq > 100)
+
+# Count number of groups with 5-10 IDs in Legset
+count_5_10_ci <- sum(group_sizes_ci$Freq >= 5 & group_sizes_ci$Freq <= 10)
+
+# Count number of groups with 10-30 IDs in Legset
+count_10_30_ci <- sum(group_sizes_ci$Freq > 10 & group_sizes_ci$Freq <= 30)
+
+# Count number of groups with 30-50 IDs in Legset
+count_30_50_ci <- sum(group_sizes_ci$Freq > 30 & group_sizes_ci$Freq <= 50)
+
+# Count number of groups with 50-100 IDs in Legset
+count_50_100_ci <- sum(group_sizes_ci$Freq > 50 & group_sizes_ci$Freq <= 100)
+
+# Count number of groups with 100+ IDs in Legset
+count_100_plus_ci <- sum(group_sizes_ci$Freq > 100)
+
+# Print counts for Armset
+cat("Count of groups with 5-10 IDs in Armset:", count_5_10_bi, "\n")
+cat("Count of groups with 10-30 IDs in Armset:", count_10_30_bi, "\n")
+cat("Count of groups with 30-50 IDs in Armset:", count_30_50_bi, "\n")
+cat("Count of groups with 50-100 IDs in Armset:", count_50_100_bi, "\n")
+cat("Count of groups with 100+ IDs in Armset:", count_100_plus_bi, "\n")
+
+# Print counts for Legset
+cat("Count of groups with 5-10 IDs in Legset:", count_5_10_ci, "\n")
+cat("Count of groups with 10-30 IDs in Legset:", count_10_30_ci, "\n")
+cat("Count of groups with 30-50 IDs in Legset:", count_30_50_ci, "\n")
+cat("Count of groups with 50-100 IDs in Legset:", count_50_100_ci, "\n")
+cat("Count of groups with 100+ IDs in Legset:", count_100_plus_ci, "\n")
+
+```
+
 
 # 3. Visualise the limb lengths and indices between males and females
 ## 3.1. Counting males and females 
@@ -237,12 +290,12 @@ TML_female <- Legset$finalTML[Legset$Sex == 2]
 TML_both <- Legset$finalTML
 
 # Combine the data of index
-BI_male <- Armset$ConventionalBI[Armset$Sex == 1]
-BI_female <- Armset$ConventionalBI[Armset$Sex == 2]
-BI_both <- Armset$ConventionalBI
-CI_male <- Legset$ConventionalCI[Legset$Sex == 1]
-CI_female <- Legset$ConventionalCI[Legset$Sex == 2]
-CI_both <- Legset$ConventionalCI
+BI_male <- Armset$cBI[Armset$Sex == 1]
+BI_female <- Armset$cBI[Armset$Sex == 2]
+BI_both <- Armset$cBI
+CI_male <- Legset$cCI[Legset$Sex == 1]
+CI_female <- Legset$cCI[Legset$Sex == 2]
+CI_both <- Legset$cCI
 ```
 
 ```{r}
@@ -315,7 +368,7 @@ p4 <- ggplot(df_TML, aes(x = values, fill = group)) +
 
 # Create a data frame for BI
 df_BI <- subset(data.frame(values = c(BI_male, BI_female),
-                 group = rep(c("BIt - Male", "BIt - Female"), c(length(BI_male), length(BI_female)))),
+                 group = rep(c("cBI - Male", "cBI - Female"), c(length(BI_male), length(BI_female)))),
                values > 0.6 & values < 0.99)
 
 # Create the histogram for BIt 
@@ -323,7 +376,7 @@ df_BI <- subset(data.frame(values = c(BI_male, BI_female),
 p5 <- ggplot(df_BI, aes(x = values, fill = group)) + 
   geom_histogram(binwidth = 0.01, alpha = 0.6, position = "identity") +
   scale_fill_manual(values = c("#d45087", "skyblue")) +
-  labs(title = "", x = "BIc", y = "Frequency", fill = "Sex") +
+  labs(title = "", x = "cBI", y = "Frequency", fill = "Sex") +
   theme_classic() +
   theme(
     legend.title = element_text(face = "bold", size = 14),
@@ -334,13 +387,13 @@ p5 <- ggplot(df_BI, aes(x = values, fill = group)) +
 
 # Create a data frame for CI
 df_CI <- subset(data.frame(values = c(CI_male, CI_female),
-                 group = rep(c("CIt - Male", "CIt - Female"), c(length(CI_male), length(CI_female)))), values < 1)
+                 group = rep(c("cCI - Male", "cCI - Female"), c(length(CI_male), length(CI_female)))), values < 1)
 
-# Create the histogram for CIt
+# Create the histogram for cCI
 p6 <- ggplot(df_CI, aes(x = values, fill = group)) + 
   geom_histogram(binwidth = 0.01, alpha = 0.6, position = "identity") +
   scale_fill_manual(values = c( "#a05195",  "blue")) +
-  labs(title = "", x = "CIc", y = "Frequency", fill = "Sex") +
+  labs(title = "", x = "cCI", y = "Frequency", fill = "Sex") +
   theme_classic()+
   theme(legend.title = element_text(face = "bold", size = 14),
         legend.text = element_text(face = "bold", size = 14),
@@ -517,266 +570,165 @@ summary_TML_female
 ### 4.2.1. Summarise the indices (combined)
 ```{r}
 # Brachial index
-## Mean_BIc
-Mean_BIc <- aggregate(Armset$ConventionalBI, by = list(Armset$SITE), FUN = mean)
-colnames(Mean_BIc) <- c("SITE", "mean_BIc")
+## Mean_cBI
+Mean_cBI <- aggregate(Armset$cBI, by = list(Armset$SITE), FUN = mean)
+colnames(Mean_cBI) <- c("SITE", "mean_cBI")
 
-summary_mean_BIc <- data.frame(
-  mean_mean_BIc = mean(Mean_BIc$mean_BIc),
-  max_mean_BIc = max(Mean_BIc$mean_BIc),
-  min_mean_BIc = min(Mean_BIc$mean_BIc),
-  sd_mean_BIc = sd(Mean_BIc$mean_BIc)
+summary_mean_cBI <- data.frame(
+  mean_mean_cBI = mean(Mean_cBI$mean_cBI),
+  max_mean_cBI = max(Mean_cBI$mean_cBI),
+  min_mean_cBI = min(Mean_cBI$mean_cBI),
+  sd_mean_cBI = sd(Mean_cBI$mean_cBI)
 )
 
-## SD_BIc
-SD_BIc <- aggregate(Armset$ConventionalBI, by = list(Armset$SITE), FUN = sd)
-colnames(SD_BIc) <- c("SITE", "sd_BIc")
+## SD_cBI
+SD_cBI <- aggregate(Armset$cBI, by = list(Armset$SITE), FUN = sd)
+colnames(SD_cBI) <- c("SITE", "sd_cBI")
 
-summary_sd_BIc <- data.frame(
-  mean_sd_BIc = mean(SD_BIc$sd_BIc),
-  max_sd_BIc = max(SD_BIc$sd_BIc),
-  min_sd_BIc = min(SD_BIc$sd_BIc),
-  sd_sd_BIc = sd(SD_BIc$sd_BIc)
+summary_sd_cBI <- data.frame(
+  mean_sd_cBI = mean(SD_cBI$sd_cBI),
+  max_sd_cBI = max(SD_cBI$sd_cBI),
+  min_sd_cBI = min(SD_cBI$sd_cBI),
+  sd_sd_cBI = sd(SD_cBI$sd_cBI)
 )
 
 
 # Crural index
 ## Mean_CIt
-Mean_CIc <- aggregate(Legset$ConventionalCI, by = list(Legset$SITE), FUN = mean)
-colnames(Mean_CIc) <- c("SITE", "mean_CIc")
+Mean_cCI <- aggregate(Legset$cCI, by = list(Legset$SITE), FUN = mean)
+colnames(Mean_cCI) <- c("SITE", "mean_cCI")
 
-summary_mean_CIc <- data.frame(
-  mean_mean_CIc = mean(Mean_CIc$mean_CIc),
-  max_mean_CIc = max(Mean_CIc$mean_CIc),
-  min_mean_CIc = min(Mean_CIc$mean_CIc),
-  sd_mean_CIc = sd(Mean_CIc$mean_CIc)
+summary_mean_cCI <- data.frame(
+  mean_mean_cCI = mean(Mean_cCI$mean_cCI),
+  max_mean_cCI = max(Mean_cCI$mean_cCI),
+  min_mean_cCI = min(Mean_cCI$mean_cCI),
+  sd_mean_cCI = sd(Mean_cCI$mean_cCI)
 )
 
 ## SD_CIt
-SD_CIc <- aggregate(Legset$ConventionalCI, by = list(Legset$SITE), FUN = sd)
-colnames(SD_CIc) <- c("SITE", "sd_CIc")
+SD_cCI <- aggregate(Legset$cCI, by = list(Legset$SITE), FUN = sd)
+colnames(SD_cCI) <- c("SITE", "sd_cCI")
 
-summary_sd_CIc <- data.frame(
-  mean_sd_CIc = mean(SD_CIc$sd_CIc),
-  max_sd_CIc = max(SD_CIc$sd_CIc),
-  min_sd_CIc = min(SD_CIc$sd_CIc),
-  sd_sd_CIc = sd(SD_CIc$sd_CIc)
+summary_sd_cCI <- data.frame(
+  mean_sd_cCI = mean(SD_cCI$sd_cCI),
+  max_sd_cCI = max(SD_cCI$sd_cCI),
+  min_sd_cCI = min(SD_cCI$sd_cCI),
+  sd_sd_cCI = sd(SD_cCI$sd_cCI)
 )
 
 # Print summary statistics
-summary_mean_BIc
-summary_mean_CIc
-summary_sd_BIc
-summary_sd_CIc
+summary_mean_cBI
+summary_mean_cCI
+summary_sd_cBI
+summary_sd_cCI
 ```
 
 ### 4.2.2. Summarise the indices (by sex)
 ```{r}
 
 # Brachial index
-## Mean_BIc 
+## Mean_cBI 
 ### Male
-Mean_BIc_male <- aggregate(ConventionalBI ~ SITE, data = Armset[Armset$Sex == 1, ], FUN = mean)
-colnames(Mean_BIc_male) <- c("SITE", "mean_BIc_male")
+Mean_cBI_male <- aggregate(cBI ~ SITE, data = Armset[Armset$Sex == 1, ], FUN = mean)
+colnames(Mean_cBI_male) <- c("SITE", "mean_cBI_male")
 
-summary_mean_BIc_male <- data.frame(
-  mean_mean_BIc_male = mean(Mean_BIc_male$mean_BIc_male),
-  max_mean_BIc_male = max(Mean_BIc_male$mean_BIc_male),
-  min_mean_BIc_male = min(Mean_BIc_male$mean_BIc_male),
-  sd_mean_BIc_male = sd(Mean_BIc_male$mean_BIc_male)
+summary_mean_cBI_male <- data.frame(
+  mean_mean_cBI_male = mean(Mean_cBI_male$mean_cBI_male),
+  max_mean_cBI_male = max(Mean_cBI_male$mean_cBI_male),
+  min_mean_cBI_male = min(Mean_cBI_male$mean_cBI_male),
+  sd_mean_cBI_male = sd(Mean_cBI_male$mean_cBI_male)
 )
 
-## SD_BIc 
+## SD_cBI 
 ### Male
-SD_BIc_male <- aggregate(ConventionalBI ~ SITE, data = Armset[Armset$Sex == 1, ], FUN = sd)
-colnames(SD_BIc_male) <- c("SITE", "sd_BIc_male")
+SD_cBI_male <- aggregate(cBI ~ SITE, data = Armset[Armset$Sex == 1, ], FUN = sd)
+colnames(SD_cBI_male) <- c("SITE", "sd_cBI_male")
 
-summary_sd_BIc_male <- data.frame(
-  mean_sd_BIc_male = mean(SD_BIc_male$sd_BIc_male, na.rm = TRUE),
-  max_sd_BIc_male = max(SD_BIc_male$sd_BIc_male, na.rm = TRUE),
-  min_sd_BIc_male = min(SD_BIc_male$sd_BIc_male, na.rm = TRUE),
-  sd_sd_BIc_male = sd(SD_BIc_male$sd_BIc_male, na.rm = TRUE)
+summary_sd_cBI_male <- data.frame(
+  mean_sd_cBI_male = mean(SD_cBI_male$sd_cBI_male, na.rm = TRUE),
+  max_sd_cBI_male = max(SD_cBI_male$sd_cBI_male, na.rm = TRUE),
+  min_sd_cBI_male = min(SD_cBI_male$sd_cBI_male, na.rm = TRUE),
+  sd_sd_cBI_male = sd(SD_cBI_male$sd_cBI_male, na.rm = TRUE)
 )
 
 #### Female
-Mean_BIc_female <- aggregate(ConventionalBI ~ SITE, data = Armset[Armset$Sex == 2, ], FUN = mean)
-colnames(Mean_BIc_female) <- c("SITE", "mean_BIc_female")
+Mean_cBI_female <- aggregate(cBI ~ SITE, data = Armset[Armset$Sex == 2, ], FUN = mean)
+colnames(Mean_cBI_female) <- c("SITE", "mean_cBI_female")
 
-summary_mean_BIc_female <- data.frame(
-  mean_mean_BIc_female = mean(Mean_BIc_female$mean_BIc_female),
-  max_mean_BIc_female = max(Mean_BIc_female$mean_BIc_female),
-  min_mean_BIc_female = min(Mean_BIc_female$mean_BIc_female),
-  sd_mean_BIc_female = sd(Mean_BIc_female$mean_BIc_female)
+summary_mean_cBI_female <- data.frame(
+  mean_mean_cBI_female = mean(Mean_cBI_female$mean_cBI_female),
+  max_mean_cBI_female = max(Mean_cBI_female$mean_cBI_female),
+  min_mean_cBI_female = min(Mean_cBI_female$mean_cBI_female),
+  sd_mean_cBI_female = sd(Mean_cBI_female$mean_cBI_female)
 )
 
-### SD_BIt 
-SD_BIc_female <- aggregate(ConventionalBI ~ SITE, data = Armset[Armset$Sex == 2, ], FUN = sd)
-colnames(SD_BIc_female) <- c("SITE", "sd_BIc_female")
+### SD_cBI 
+SD_cBI_female <- aggregate(cBI ~ SITE, data = Armset[Armset$Sex == 2, ], FUN = sd)
+colnames(SD_cBI_female) <- c("SITE", "sd_cBI_female")
 
-summary_sd_BIc_female <- data.frame(
-  mean_sd_BIc_female = mean(SD_BIc_female$sd_BIc_female, na.rm = TRUE),
-  max_sd_BIc_female = max(SD_BIc_female$sd_BIc_female, na.rm = TRUE),
-  min_sd_BIc_female = min(SD_BIc_female$sd_BIc_female, na.rm = TRUE),
-  sd_sd_BIc_female = sd(SD_BIc_female$sd_BIc_female, na.rm = TRUE)
+summary_sd_cBI_female <- data.frame(
+  mean_sd_cBI_female = mean(SD_cBI_female$sd_cBI_female, na.rm = TRUE),
+  max_sd_cBI_female = max(SD_cBI_female$sd_cBI_female, na.rm = TRUE),
+  min_sd_cBI_female = min(SD_cBI_female$sd_cBI_female, na.rm = TRUE),
+  sd_sd_cBI_female = sd(SD_cBI_female$sd_cBI_female, na.rm = TRUE)
 )
 
 ## Crural index
 
 ### Male
-#### Mean_CIc
-Mean_CIc_male <- aggregate(Legset$ConventionalCI[Legset$Sex == 1], by = list(Legset$SITE[Legset$Sex == 1]), FUN = mean)
-colnames(Mean_CIc_male) <- c("SITE", "mean_CIc_male")
+#### Mean_cCI
+Mean_cCI_male <- aggregate(Legset$cCI[Legset$Sex == 1], by = list(Legset$SITE[Legset$Sex == 1]), FUN = mean)
+colnames(Mean_cCI_male) <- c("SITE", "mean_cCI_male")
 
-summary_mean_CIc_male <- data.frame(
-  mean_mean_CIc_male = mean(Mean_CIc_male$mean_CIc_male),
-  max_mean_CIc_male = max(Mean_CIc_male$mean_CIc_male),
-  min_mean_CIc_male = min(Mean_CIc_male$mean_CIc_male),
-  sd_mean_CIc_male = sd(Mean_CIc_male$mean_CIc_male)
+summary_mean_cCI_male <- data.frame(
+  mean_mean_cCI_male = mean(Mean_cCI_male$mean_cCI_male),
+  max_mean_cCI_male = max(Mean_cCI_male$mean_cCI_male),
+  min_mean_cCI_male = min(Mean_cCI_male$mean_cCI_male),
+  sd_mean_cCI_male = sd(Mean_cCI_male$mean_cCI_male)
 )
 
-#### SD_CIc 
-SD_CIc_male <- aggregate(Legset$ConventionalCI[Legset$Sex == 1], by = list(Legset$SITE[Legset$Sex == 1]), FUN = sd)
-colnames(SD_CIc_male) <- c("SITE", "sd_CIc_male")
+#### SD_cCI 
+SD_cCI_male <- aggregate(Legset$cCI[Legset$Sex == 1], by = list(Legset$SITE[Legset$Sex == 1]), FUN = sd)
+colnames(SD_cCI_male) <- c("SITE", "sd_cCI_male")
 
-summary_sd_CIc_male <- data.frame(
-  mean_sd_CIc_male = mean(SD_CIc_male$sd_CIc_male, na.rm = TRUE),
-  max_sd_CIc_male = max(SD_CIc_male$sd_CIc_male, na.rm = TRUE),
-  min_sd_CIc_male = min(SD_CIc_male$sd_CIc_male, na.rm = TRUE),
-  sd_sd_CIc_male = sd(SD_CIc_male$sd_CIc_male, na.rm = TRUE)
+summary_sd_cCI_male <- data.frame(
+  mean_sd_cCI_male = mean(SD_cCI_male$sd_cCI_male, na.rm = TRUE),
+  max_sd_cCI_male = max(SD_cCI_male$sd_cCI_male, na.rm = TRUE),
+  min_sd_cCI_male = min(SD_cCI_male$sd_cCI_male, na.rm = TRUE),
+  sd_sd_cCI_male = sd(SD_cCI_male$sd_cCI_male, na.rm = TRUE)
 )
 
 ### Female
-#### Mean_CIc
-Mean_CIc_female <- aggregate(Legset$ConventionalCI[Legset$Sex == 2], by = list(Legset$SITE[Legset$Sex == 2]), FUN = mean)
-colnames(Mean_CIc_female) <- c("SITE", "mean_CIc_female")
+#### Mean_cCI
+Mean_cCI_female <- aggregate(Legset$cCI[Legset$Sex == 2], by = list(Legset$SITE[Legset$Sex == 2]), FUN = mean)
+colnames(Mean_cCI_female) <- c("SITE", "mean_cCI_female")
 
-summary_mean_CIc_female <- data.frame(
-  mean_mean_CIc_female = mean(Mean_CIc_female$mean_CIc_female),
-  max_mean_CIc_female = max(Mean_CIc_female$mean_CIc_female),
-  min_mean_CIc_female = min(Mean_CIc_female$mean_CIc_female),
-  sd_mean_CIc_female = sd(Mean_CIc_female$mean_CIc_female)
+summary_mean_cCI_female <- data.frame(
+  mean_mean_cCI_female = mean(Mean_cCI_female$mean_cCI_female),
+  max_mean_cCI_female = max(Mean_cCI_female$mean_cCI_female),
+  min_mean_cCI_female = min(Mean_cCI_female$mean_cCI_female),
+  sd_mean_cCI_female = sd(Mean_cCI_female$mean_cCI_female)
 )
 
-#### SD_CIc 
-SD_CIc_female <- aggregate(Legset$ConventionalCI[Legset$Sex == 2], by = list(Legset$SITE[Legset$Sex == 2]), FUN = sd)
-colnames(SD_CIc_female) <- c("SITE", "sd_CIc_female")
+#### SD_cCI 
+SD_cCI_female <- aggregate(Legset$cCI[Legset$Sex == 2], by = list(Legset$SITE[Legset$Sex == 2]), FUN = sd)
+colnames(SD_cCI_female) <- c("SITE", "sd_cCI_female")
 
-summary_sd_CIc_female <- data.frame(
-  mean_sd_CIc_female = mean(SD_CIc_female$sd_CIc_female, na.rm = TRUE),
-  max_sd_CIc_female = max(SD_CIc_female$sd_CIc_female, na.rm = TRUE),
-  min_sd_CIc_female = min(SD_CIc_female$sd_CIc_female, na.rm = TRUE),
-  sd_sd_CIc_female = sd(SD_CIc_female$sd_CIc_female, na.rm = TRUE)
+summary_sd_cCI_female <- data.frame(
+  mean_sd_cCI_female = mean(SD_cCI_female$sd_cCI_female, na.rm = TRUE),
+  max_sd_cCI_female = max(SD_cCI_female$sd_cCI_female, na.rm = TRUE),
+  min_sd_cCI_female = min(SD_cCI_female$sd_cCI_female, na.rm = TRUE),
+  sd_sd_cCI_female = sd(SD_cCI_female$sd_cCI_female, na.rm = TRUE)
 )
 
 
 # Print summary statistics
-summary_mean_BIc_male
-summary_mean_CIc_male
-summary_sd_BIc_male
-summary_sd_CIc_male
-summary_mean_BIc_female
-summary_mean_CIc_female
-summary_sd_BIc_female
-summary_sd_CIc_female
-```
-
-# 5. Compare the limb lengths and indices between males and females
-## 5.1. Conduct t-tests on the limb lengths
-```{r}
-results_ttest_limblength <- data.frame()
-
-# Conduct t-tests for limb lengths between males and females at each site
-for (site in unique(Armset$SITE)) {
-  male_hml <- subset(Armset, Sex == 1 & SITE == site)$finalHML
-  female_hml <- subset(Armset, Sex == 2 & SITE == site)$finalHML
-  male_rml <- subset(Armset, Sex == 1 & SITE == site)$finalRML
-  female_rml <- subset(Armset, Sex == 2 & SITE == site)$finalRML
-
-  male_fbl <- subset(Legset, Sex == 1 & SITE == site)$finalFBL
-  female_fbl <- subset(Legset, Sex == 2 & SITE == site)$finalFBL
-  male_tml <- subset(Legset, Sex == 1 & SITE == site)$finalTML
-  female_tml <- subset(Legset, Sex == 2 & SITE == site)$finalTML
-
-  if (length(male_hml) >= 3 & length(female_hml) >= 3 & length(male_rml) >= 3 & length(female_rml) >= 3 & length(male_fbl) >= 3 & length(female_fbl) >= 3 & length(male_tml) >= 3 & length(female_tml) >= 3) {
-    ttest_hml <- t.test(male_hml, female_hml)
-    ttest_rml <- t.test(male_rml, female_rml)
-    ttest_fbl <- t.test(male_fbl, female_fbl)
-    ttest_tml <- t.test(male_tml, female_tml)
-
-    results_ttest_limblength <- rbind(results_ttest_limblength,
-                                      data.frame(Site = site,
-                                                 Variable = c("HML", "RML", "FBL", "TML"),
-                                                 Group = rep("Male vs. Female", 4),
-                                                 t_statistic = c(ttest_hml$statistic, ttest_rml$statistic, ttest_fbl$statistic, ttest_tml$statistic),
-                                                 p_value = c(ttest_hml$p.value, ttest_rml$p.value, ttest_fbl$p.value, ttest_tml$p.value))
-    )
-  }
-}
-
-# HML
-num_sig_ttests_HML <- sum(results_ttest_limblength$Variable == 'HML' & results_ttest_limblength$p_value < 0.05)
-cat("Number of significant T-tests for HML:", num_sig_ttests_HML, "\n")
-
-num_nonsig_ttests_HML <- sum(results_ttest_limblength$Variable == 'HML' & results_ttest_limblength$p_value >= 0.05)
-cat("Number of non-significant T-tests for HML:", num_nonsig_ttests_HML, "\n")
-
-# RML
-num_sig_ttests_RML <- sum(results_ttest_limblength$Variable == 'RML' & results_ttest_limblength$p_value < 0.05)
-cat("Number of significant T-tests for RML:", num_sig_ttests_RML, "\n")
-
-num_nonsig_ttests_RML <- sum(results_ttest_limblength$Variable == 'RML' & results_ttest_limblength$p_value >= 0.05)
-cat("Number of non-significant T-tests for RML:", num_nonsig_ttests_RML, "\n")
-
-# FBL
-num_sig_ttests_FBL <- sum(results_ttest_limblength$Variable == 'FBL' & results_ttest_limblength$p_value < 0.05)
-cat("Number of significant T-tests for FBL:", num_sig_ttests_FBL, "\n")
-
-num_nonsig_ttests_FBL <- sum(results_ttest_limblength$Variable == 'FBL' & results_ttest_limblength$p_value >= 0.05)
-cat("Number of non-significant T-tests for FBL:", num_nonsig_ttests_FBL, "\n")
-
-# TML
-num_sig_ttests_TML <- sum(results_ttest_limblength$Variable == 'TML' & results_ttest_limblength$p_value < 0.05)
-cat("Number of significant T-tests for TML:", num_sig_ttests_TML, "\n")
-
-num_nonsig_ttests_TML <- sum(results_ttest_limblength$Variable == 'TML' & results_ttest_limblength$p_value >= 0.05)
-cat("Number of non-significant T-tests for TML:", num_nonsig_ttests_TML, "\n")
-```
-
-## 5.2. Conduct t-tests on the indices
-```{r}
-results_ttest_BC <- data.frame()
-
-# Conduct t-tests for BI and CI between males and females at each site
-for (site in unique(Armset$SITE)) {
-  male_bic <- subset(Armset, Sex == 1 & SITE == site)$ConventionalBI
-  female_bic <- subset(Armset, Sex == 2 & SITE == site)$ConventionalBI
-  male_cic <- subset(Legset, Sex == 1 & SITE == site)$ConventionalCI
-  female_cic <- subset(Legset, Sex == 2 & SITE == site)$ConventionalCI
-
-  if (length(male_bic) >= 3 & length(female_bic) >= 3 & length(male_cic) >= 3 & length(female_cic) >= 3) {
-    ttest_bic <- t.test(male_bic, female_bic)
-    ttest_cic <- t.test(male_cic, female_cic)
-
-    results_ttest_BC <- rbind(results_ttest_BC,
-                              data.frame(Site = site,
-                                         Variable = c("BIc", "CIc"),
-                                         Group = rep("Male vs. Female", 2),
-                                         t_statistic = c(ttest_bic$statistic, ttest_cic$statistic),
-                                         p_value = c(ttest_bic$p.value, ttest_cic$p.value))
-    )
-  }
-}
-
-# Count the number of significant and non-significant t-tests
-num_sig_ttests_BIc <- sum(results_ttest_BC$Variable == 'BIc' & results_ttest_BC$p_value < 0.05)
-cat("Number of significant T-tests for BIc:", num_sig_ttests_BIc, "\n")
-
-num_nonsig_ttests_BIc <- sum(results_ttest_BC$Variable == 'BIc' & results_ttest_BC$p_value >= 0.05)
-cat("Number of non-significant T-tests for BIc:", num_nonsig_ttests_BIc, "\n")
-
-num_sig_ttests_CIc <- sum(results_ttest_BC$Variable == 'CIc' & results_ttest_BC$p_value < 0.05)
-cat("Number of significant T-tests for CIc:", num_sig_ttests_CIc, "\n")
-
-num_nonsig_ttests_CIc <- sum(results_ttest_BC$Variable == 'CIc' & results_ttest_BC$p_value >= 0.05)
-cat("Number of non-significant T-tests for CIc:", num_nonsig_ttests_CIc, "\n")
+summary_mean_cBI_male
+summary_mean_cCI_male
+summary_sd_cBI_male
+summary_sd_cCI_male
+summary_mean_cBI_female
+summary_mean_cCI_female
+summary_sd_cBI_female
+summary_sd_cCI_female
 ```
