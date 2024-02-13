@@ -13,19 +13,24 @@ perform_sw_test <- function(data, site, variable) {
 
 results_sw_combined <- data.frame()
 
-# Calculate the number of tests
-number_of_tests <- nrow(results_sw_combined)
+# Shapiro-Wilk Test for Armset (BI)
+for (site in unique(Armset$SITE)) {
+  data_bc <- filter(Armset, SITE == site) %>% pull(cBI)
+  results_sw_combined <- rbind(results_sw_combined, perform_sw_test(data_bc, site, "BI"))
+}
 
-# Apply Bonferroni correction
-results_sw_combined$Adjusted_SW_P_Value <- p.adjust(results_sw_combined$SW_P_Value, method = "bonferroni", n = number_of_tests)
+# Shapiro-Wilk Test for Legset (CI)
+for (site in unique(Legset$SITE)) {
+  data_ci <- filter(Legset, SITE == site) %>% pull(cCI)
+  results_sw_combined <- rbind(results_sw_combined, perform_sw_test(data_ci, site, "CI"))
+}
 
-# Creat the plot to use adjusted p-values
-shapiro_plot_combined <- ggplot(results_sw_combined, aes(x = SITE, y = SW_Statistic, fill = Adjusted_SW_P_Value < 0.05)) +
+shapiro_plot_combined <- ggplot(results_sw_combined, aes(x = SITE, y = SW_Statistic, fill = SW_P_Value < 0.05)) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(name = "Adj P-value < 0.05", values = c("blue", "red")) +
+  scale_fill_manual(name = "P-value < 0.05", values = c("blue", "red")) +
   labs(title = "Shapiro-Wilk Test for Normality of BI and CI (Combined Sexes)", 
-       x = "Group", y = "SW Statistic", fill = "Adj P-value > 0.05") +
-  facet_grid(Variable ~ .) +
+       x = "Group", y = "SW Statistic", fill = "P-value > 0.05") +
+  facet_grid(Variable ~ .) +  # Arrange facets in row
   theme(axis.text.x = element_text(size = 6, angle = 90, hjust = 1),
         axis.title.x = element_text(size = 12), 
         axis.title.y = element_text(size = 12),  
@@ -34,6 +39,7 @@ shapiro_plot_combined <- ggplot(results_sw_combined, aes(x = SITE, y = SW_Statis
 # Save the plot
 ggsave("shapiro_test_plot_combined.pdf", plot = shapiro_plot_combined, width = 16, height = 8, units = "in", dpi = 300)
 ggsave("shapiro_test_plot_combined.png", plot = shapiro_plot_combined, width = 16, height = 8, units = "in", dpi = 300)
+
 ```
 
 ### t-test
@@ -66,24 +72,16 @@ for (site in unique(Legset$SITE)) {
 }
 
 # Create the plot
-# Calculate the number of tests
-number_of_tests <- nrow(results_ttest_BC)
-
-# Apply Bonferroni correction
-results_ttest_BC$Adjusted_P_Value <- p.adjust(results_ttest_BC$p_value, method = "bonferroni", n = number_of_tests)
-
-# Update the plot to use adjusted p-values
-ttest_plot_BC <- ggplot(results_ttest_BC, aes(x = SITE, y = t_statistic, fill = Adjusted_P_Value < 0.05)) +
+ttest_plot_BC <- ggplot(results_ttest_BC, aes(x = SITE, y = t_statistic, fill = p_value < 0.05)) +
   geom_bar(stat = "identity", position = "dodge") +
-  scale_fill_manual(name = "Adj P-value < 0.05", values = c( "blue","red")) +
+  scale_fill_manual(name = "P-value < 0.05", values = c( "blue","red")) +
   labs(title = "T-Test for BI and CI between Males and Females by Group", 
-       x = "Group", y = "T-Statistic", fill = "Adj P-value > 0.05") +
+       x = "Group", y = "T-Statistic", fill = "P-value > 0.05") +
   facet_wrap(~ Variable, nrow = 2) +
   theme(axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust=1),
         axis.title.x = element_text(size = 14, face = "bold"), 
         axis.title.y = element_text(size = 14, face = "bold"),  
         axis.text.y = element_text(size = 12))
-ttest_plot_BC
 
 # Save the plot
 ggsave("ttest_results_plot_BC.pdf", plot = ttest_plot_BC, width = 16, height = 8, units = "in", dpi = 300)
