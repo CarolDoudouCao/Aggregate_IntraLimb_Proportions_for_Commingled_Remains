@@ -1,0 +1,91 @@
+### SW test regardless sex
+```{r}
+perform_sw_test <- function(data, site, variable) {
+  if (length(data) >= 3) {
+    sw_test <- shapiro.test(data)
+    return(data.frame(SITE = site, Variable = variable,
+                      SW_Statistic = sw_test$statistic, SW_P_Value = sw_test$p.value))
+  } else {
+    return(data.frame(SITE = site, Variable = variable, 
+                      SW_Statistic = NA, SW_P_Value = NA))
+  }
+}
+
+results_sw_combined <- data.frame()
+
+# Shapiro-Wilk Test for Armset (BI)
+for (site in unique(Armset$SITE)) {
+  data_bc <- filter(Armset, SITE == site) %>% pull(cBI)
+  results_sw_combined <- rbind(results_sw_combined, perform_sw_test(data_bc, site, "BI"))
+}
+
+# Shapiro-Wilk Test for Legset (CI)
+for (site in unique(Legset$SITE)) {
+  data_ci <- filter(Legset, SITE == site) %>% pull(cCI)
+  results_sw_combined <- rbind(results_sw_combined, perform_sw_test(data_ci, site, "CI"))
+}
+
+shapiro_plot_combined <- ggplot(results_sw_combined, aes(x = SITE, y = SW_Statistic, fill = SW_P_Value < 0.05)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(name = "P-value < 0.05", values = c("blue", "red")) +
+  labs(title = "Shapiro-Wilk Test for Normality of BI and CI (Combined Sexes)", 
+       x = "Group", y = "SW Statistic", fill = "P-value > 0.05") +
+  facet_grid(Variable ~ .) +  # Arrange facets in row
+  theme(axis.text.x = element_text(size = 6, angle = 90, hjust = 1),
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12),  
+        axis.text.y = element_text(size = 10))
+
+# Save the plot
+ggsave("shapiro_test_plot_combined.pdf", plot = shapiro_plot_combined, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("shapiro_test_plot_combined.png", plot = shapiro_plot_combined, width = 16, height = 8, units = "in", dpi = 300)
+
+```
+
+### t-test
+```{r}
+# Function for performing t-tests
+perform_t_test <- function(data1, data2, site, variable) {
+  if (length(data1) >= 3 && length(data2) >= 3) {
+    t_test <- t.test(data1, data2)
+    return(data.frame(SITE = site, Variable = variable, 
+                      t_statistic = t_test$statistic, p_value = t_test$p.value))
+  } else {
+    return(data.frame(SITE = site, Variable = variable, t_statistic = NA, p_value = NA))
+  }
+}
+
+results_ttest_BC <- data.frame()
+
+# T-test for BI (Brachial Index) in Armset
+for (site in unique(Armset$SITE)) {
+  male_bc <- filter(Armset, Sex == "1" & SITE == site) %>% pull(cBI)
+  female_bc <- filter(Armset, Sex == "2" & SITE == site) %>% pull(cBI)
+  results_ttest_BC <- rbind(results_ttest_BC, perform_t_test(male_bc, female_bc, site, "BI"))
+}
+
+# T-test for CI (Crural Index) in Legset
+for (site in unique(Legset$SITE)) {
+  male_ci <- filter(Legset, Sex == "1" & SITE == site) %>% pull(cCI)
+  female_ci <- filter(Legset, Sex == "2" & SITE == site) %>% pull(cCI)
+  results_ttest_BC <- rbind(results_ttest_BC, perform_t_test(male_ci, female_ci, site, "CI"))
+}
+
+# Create the plot
+ttest_plot_BC <- ggplot(results_ttest_BC, aes(x = SITE, y = t_statistic, fill = p_value < 0.05)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(name = "P-value < 0.05", values = c( "blue","red")) +
+  labs(title = "T-Test for BI and CI between Males and Females by Group", 
+       x = "Group", y = "T-Statistic", fill = "P-value > 0.05") +
+  facet_wrap(~ Variable, nrow = 2) +
+  theme(axis.text.x = element_text(size = 5, angle = 90, vjust = 0.5, hjust=1),
+        axis.title.x = element_text(size = 14, face = "bold"), 
+        axis.title.y = element_text(size = 14, face = "bold"),  
+        axis.text.y = element_text(size = 12))
+
+# Save the plot
+ggsave("ttest_results_plot_BC.pdf", plot = ttest_plot_BC, width = 16, height = 8, units = "in", dpi = 300)
+ggsave("ttest_results_plot_BC.png", plot = ttest_plot_BC, width = 16, height = 8, units = "in", dpi = 300)
+
+
+```
