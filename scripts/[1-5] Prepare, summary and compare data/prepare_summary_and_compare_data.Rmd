@@ -405,6 +405,42 @@ combined_histogram_indices <- grid.arrange(p5, p6, ncol = 2)
 combined_histogram_limblength_indices <- grid.arrange(p1, p2, p3, p4, p5, p6, ncol = 2)
 ```
 
+```{r}
+# Another way to plot the BIt and CIt with contituous scale
+
+p7 <- ggplot(df_BI, aes(x = values, fill = group, color = group)) + 
+  geom_density(alpha = 0.6) +
+  scale_fill_manual(values = c("#d45087", "skyblue")) +
+  scale_color_manual(values = c("#d45087", "skyblue")) +
+  labs(title = "", x = "cBI", y = "Density", fill = "Sex", color = "Sex") +
+  theme_classic() +
+  theme(
+    legend.title = element_text(face = "bold", size = 14),
+    legend.text = element_text(face = "bold", size = 14),
+    axis.title = element_text(face = "bold", size = 18),
+    axis.text =  element_text(face = "bold", size = 14)) +
+  scale_x_continuous(breaks = seq(0, 1, by = 0.05))
+
+# for CI
+
+p8 <- ggplot(df_CI, aes(x = values, fill = group, color = group)) + 
+  geom_density(alpha = 0.6) +
+  scale_fill_manual(values = c("#d45087", "skyblue")) +
+  scale_color_manual(values = c("#d45087", "skyblue")) +
+  labs(title = "", x = "cCI", y = "Density", fill = "Sex", color = "Sex") +
+  theme_classic() +
+  theme(
+    legend.title = element_text(face = "bold", size = 14),
+    legend.text = element_text(face = "bold", size = 14),
+    axis.title = element_text(face = "bold", size = 18),
+    axis.text =  element_text(face = "bold", size = 14))
+
+# Combine the BI and CI plots
+combined_histogram_indices <- grid.arrange(p7, p8, ncol = 2)
+
+```
+
+
 # 4. Summarise the limb lengths and indices
 ## 4.1. Summarise the limb lengths 
 ### 4.1.1. Summarise the limb lengths (combined)
