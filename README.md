@@ -35,7 +35,7 @@ The table below compares the conventional approach, where an index is calculated
 
 | Method                | Conventional Approach                                                                          | Aggregate Approach                                                                      |
 |-----------------------|----------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| Description           | Index calculated for each individual, and then mean taken for the group                       | Mean of relevant measurements computed for aggregated index                              |
+| Description           | Sample mean of the indices calculated for each individual in the assemblage                   | Index calculated from the sample mean limb measurements in the assemblage              |
 | BI Equation           | _BIi_ = _RMLi / HMLi_; _cBIgroup_ = (Σ(_BIi_)) / n                                               |  _aBigroup_ = (1/n) * Σ(_RMLi_) / (1/n) * Σ(_HMLi_)                |
 | CI Equation           | _CIi_ = _TMLi / FBLi_; _aCIgroup_ = (Σ(_CIi_)) / n                                               |  _cCIgroup_ = (1/n) * Σ(_TMLi_) / (1/n) * Σ(_FBLi_)                |
 | Applicability         | Suitable for identified individuals                                                           | Practical for commingled remains without identified individuals                          |
